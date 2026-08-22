@@ -1,0 +1,1037 @@
+<title>EatsNow</title>
+<style>
+  :root{
+    --bg:#f4f5f4; --surface:#ffffff; --surface-2:#f6f6f6; --elev:#ffffff;
+    --ink:#0d0d0d; --ink-2:#565a57; --ink-3:#8b908c; --line:#e8e9e8;
+    --brand:#00a862; --brand-strong:#008a51; --brand-tint:#e6f6ee; --on-brand:#ffffff;
+    --star:#f5a623; --danger:#e23744;
+    --map-bg:#e6ece9; --map-road:#ffffff; --map-block:#dbe2de; --map-park:#d6ebd9; --map-water:#cfe4f2;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.05);
+    --shadow:0 2px 10px rgba(0,0,0,.06), 0 10px 30px rgba(0,0,0,.06);
+    --shadow-lg:0 20px 60px rgba(0,0,0,.18);
+    --radius:16px; --radius-sm:12px;
+    --maxw:1120px;
+    --font:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#0a0b0a; --surface:#161817; --surface-2:#1e211f; --elev:#1a1c1b;
+      --ink:#f4f6f4; --ink-2:#b1b7b3; --ink-3:#7c827e; --line:#2a2d2b;
+      --brand:#26c47f; --brand-strong:#1fae6e; --brand-tint:#12281f; --on-brand:#04140c;
+      --star:#ffb43a; --danger:#ff5a67;
+      --map-bg:#121a16; --map-road:#243029; --map-block:#1b241f; --map-park:#17321f; --map-water:#153341;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+      --shadow:0 2px 10px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.55);
+      --shadow-lg:0 24px 70px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a0b0a; --surface:#161817; --surface-2:#1e211f; --elev:#1a1c1b;
+    --ink:#f4f6f4; --ink-2:#b1b7b3; --ink-3:#7c827e; --line:#2a2d2b;
+    --brand:#26c47f; --brand-strong:#1fae6e; --brand-tint:#12281f; --on-brand:#04140c;
+    --star:#ffb43a; --danger:#ff5a67;
+    --map-bg:#121a16; --map-road:#243029; --map-block:#1b241f; --map-park:#17321f; --map-water:#153341;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+    --shadow:0 2px 10px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.55);
+    --shadow-lg:0 24px 70px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--font);
+    -webkit-font-smoothing:antialiased; line-height:1.45; overflow-x:hidden;
+  }
+  button{font-family:inherit; cursor:pointer}
+  :focus-visible{outline:2.5px solid var(--brand); outline-offset:2px; border-radius:6px}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* ---------- Top bar ---------- */
+  #topbar{
+    position:sticky; top:0; z-index:40; background:var(--surface);
+    border-bottom:1px solid var(--line); box-shadow:var(--shadow-sm);
+  }
+  .topbar-in{
+    max-width:var(--maxw); margin:0 auto; padding:12px 18px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:9px; font-weight:800; font-size:22px; letter-spacing:-.02em; color:var(--ink); flex-shrink:0}
+  .brand .mark{
+    width:30px; height:30px; border-radius:9px; background:var(--brand);
+    display:grid; place-items:center; font-size:17px; box-shadow:0 4px 12px rgba(0,168,98,.35);
+  }
+  .brand em{color:var(--brand); font-style:normal}
+  .demo-pill{
+    font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--brand-strong); background:var(--brand-tint); padding:3px 7px; border-radius:999px;
+    align-self:center;
+  }
+  .loc{
+    display:flex; align-items:center; gap:7px; padding:8px 12px; border-radius:999px;
+    background:var(--surface-2); border:1px solid transparent; color:var(--ink);
+    font-size:13.5px; font-weight:600; max-width:230px; overflow:hidden;
+  }
+  .loc svg{flex-shrink:0}
+  .loc .lt{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .loc .lt small{color:var(--ink-3); font-weight:600}
+  .spacer{flex:1}
+  .cartbtn{
+    display:flex; align-items:center; gap:8px; border:none; border-radius:999px;
+    background:var(--ink); color:var(--bg); font-weight:700; font-size:14px;
+    padding:10px 16px; box-shadow:var(--shadow-sm); flex-shrink:0;
+  }
+  .cartbtn .cc{
+    background:var(--brand); color:var(--on-brand); border-radius:999px; min-width:20px; height:20px;
+    display:inline-grid; place-items:center; font-size:12px; font-weight:800; padding:0 6px;
+  }
+  .cartbtn:hover{opacity:.92}
+
+  /* ---------- Layout ---------- */
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
+  .page{padding-bottom:120px}
+
+  /* hero */
+  .hero{padding:26px 0 8px}
+  .hero h1{font-size:clamp(24px,4vw,34px); line-height:1.1; letter-spacing:-.03em; margin:0 0 14px; text-wrap:balance}
+  .search{
+    display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line);
+    border-radius:14px; padding:13px 16px; box-shadow:var(--shadow-sm); max-width:520px;
+  }
+  .search svg{flex-shrink:0; color:var(--ink-3)}
+  .search input{
+    border:none; background:transparent; outline:none; color:var(--ink); font-size:15px; width:100%; font-family:inherit;
+  }
+  .search input::placeholder{color:var(--ink-3)}
+
+  /* category chips */
+  .chips{display:flex; gap:9px; overflow-x:auto; padding:18px 0 6px; scrollbar-width:none; -webkit-overflow-scrolling:touch}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    flex-shrink:0; display:flex; align-items:center; gap:7px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink); border-radius:999px; padding:9px 15px;
+    font-weight:650; font-size:14px; white-space:nowrap;
+  }
+  .chip .ce{font-size:16px}
+  .chip[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+  .chip:hover{border-color:var(--ink-3)}
+
+  .sec-title{font-size:20px; font-weight:800; letter-spacing:-.02em; margin:22px 0 14px}
+
+  /* restaurant grid */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px 20px}
+  .rcard{
+    text-align:left; border:none; background:transparent; padding:0; border-radius:var(--radius); color:var(--ink);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .banner{
+    position:relative; height:150px; border-radius:var(--radius); overflow:hidden;
+    background:linear-gradient(135deg,var(--g1),var(--g2)); display:grid; place-items:center;
+    box-shadow:var(--shadow-sm);
+  }
+  .banner .be{font-size:64px; filter:drop-shadow(0 6px 10px rgba(0,0,0,.22))}
+  .banner .promo{
+    position:absolute; left:12px; bottom:12px; background:var(--surface); color:var(--ink);
+    font-size:12px; font-weight:800; padding:6px 10px; border-radius:999px; box-shadow:var(--shadow-sm);
+  }
+  .banner .fav{
+    position:absolute; right:12px; top:12px; width:30px; height:30px; border-radius:999px;
+    background:rgba(255,255,255,.9); display:grid; place-items:center; font-size:14px; color:#333;
+  }
+  .rcard:hover .banner{transform:translateY(-2px); box-shadow:var(--shadow)}
+  .banner{transition:transform .18s ease, box-shadow .18s ease}
+  .rname{font-size:17px; font-weight:750; letter-spacing:-.01em; display:flex; justify-content:space-between; gap:10px; align-items:center}
+  .rrate{display:inline-flex; align-items:center; gap:4px; background:var(--surface-2); border-radius:999px; padding:3px 9px; font-size:13px; font-weight:700; flex-shrink:0}
+  .rrate svg{color:var(--star)}
+  .rmeta{color:var(--ink-2); font-size:13.5px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  .dot{width:3px; height:3px; border-radius:50%; background:var(--ink-3); display:inline-block}
+  .rmeta .free{color:var(--brand-strong); font-weight:700}
+
+  /* ---------- Restaurant view ---------- */
+  .backbar{padding:16px 0 4px}
+  .backbtn{
+    display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--surface);
+    color:var(--ink); border-radius:999px; padding:9px 14px; font-weight:650; font-size:14px; box-shadow:var(--shadow-sm);
+  }
+  .backbtn:hover{border-color:var(--ink-3)}
+  .rhero{
+    height:190px; border-radius:var(--radius); background:linear-gradient(135deg,var(--g1),var(--g2));
+    display:grid; place-items:center; box-shadow:var(--shadow-sm); margin-top:12px;
+  }
+  .rhero .be{font-size:88px; filter:drop-shadow(0 8px 14px rgba(0,0,0,.25))}
+  .rhead{padding:18px 0 4px; border-bottom:1px solid var(--line); margin-bottom:8px}
+  .rhead h2{font-size:26px; letter-spacing:-.02em; margin:0 0 8px}
+  .rhead .rmeta{font-size:14px}
+  .menu-sec{margin-top:26px}
+  .menu-sec h3{font-size:18px; font-weight:800; letter-spacing:-.01em; margin:0 0 4px}
+  .menu-sec .subhint{color:var(--ink-3); font-size:13px; margin-bottom:8px}
+  .mrow{
+    display:flex; gap:16px; align-items:stretch; justify-content:space-between;
+    padding:16px 0; border-bottom:1px solid var(--line);
+  }
+  .minfo{flex:1; min-width:0}
+  .mname{font-weight:700; font-size:15.5px; margin-bottom:3px}
+  .mdesc{color:var(--ink-2); font-size:13.5px; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .mprice{font-weight:700; font-size:14.5px}
+  .mthumb{
+    position:relative; width:112px; height:112px; border-radius:14px; flex-shrink:0;
+    background:linear-gradient(135deg,var(--g1),var(--g2)); display:grid; place-items:center;
+    font-size:46px; box-shadow:var(--shadow-sm);
+  }
+  .addbtn{
+    position:absolute; right:-8px; bottom:-8px; width:36px; height:36px; border-radius:999px;
+    background:var(--surface); color:var(--ink); border:1px solid var(--line); font-size:22px; font-weight:500;
+    display:grid; place-items:center; box-shadow:var(--shadow); line-height:1;
+  }
+  .addbtn:hover{background:var(--brand); color:var(--on-brand); border-color:var(--brand)}
+  .qbadge{
+    position:absolute; left:-8px; top:-8px; min-width:24px; height:24px; padding:0 6px;
+    background:var(--brand); color:var(--on-brand); border-radius:999px; font-size:13px; font-weight:800;
+    display:none; place-items:center; box-shadow:var(--shadow-sm);
+  }
+  .qbadge.show{display:grid}
+
+  /* view cart floating bar */
+  #viewCartBar{
+    position:fixed; left:50%; transform:translateX(-50%) translateY(140%); bottom:20px; z-index:35;
+    width:min(560px,calc(100% - 32px)); transition:transform .28s cubic-bezier(.2,.8,.2,1);
+  }
+  #viewCartBar.show{transform:translateX(-50%) translateY(0)}
+  .vcbtn{
+    width:100%; border:none; border-radius:14px; background:var(--brand); color:var(--on-brand);
+    padding:15px 20px; font-size:15.5px; font-weight:800; display:flex; align-items:center; justify-content:space-between;
+    box-shadow:var(--shadow-lg);
+  }
+  .vcbtn .vc-count{background:rgba(255,255,255,.22); border-radius:8px; padding:3px 9px; font-size:13px}
+
+  /* ---------- Drawer (cart) ---------- */
+  #overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:50}
+  #overlay.show{opacity:1; pointer-events:auto}
+  #drawer{
+    position:fixed; top:0; right:0; height:100%; width:min(420px,100%); background:var(--surface); z-index:60;
+    transform:translateX(102%); transition:transform .3s cubic-bezier(.2,.8,.2,1);
+    display:flex; flex-direction:column; box-shadow:var(--shadow-lg);
+  }
+  #drawer.show{transform:none}
+  .drawer-head{display:flex; align-items:center; justify-content:space-between; padding:18px; border-bottom:1px solid var(--line)}
+  .drawer-head h3{margin:0; font-size:19px; letter-spacing:-.01em}
+  .iconbtn{width:36px; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--ink); font-size:18px; display:grid; place-items:center}
+  .iconbtn:hover{background:var(--surface-2)}
+  #drawerBody{flex:1; overflow-y:auto; padding:8px 18px}
+  .drawer-rest{font-size:13px; color:var(--ink-2); padding:12px 0 4px; font-weight:600}
+  .cline{display:flex; gap:12px; align-items:center; padding:14px 0; border-bottom:1px solid var(--line)}
+  .cthumb{width:46px; height:46px; border-radius:10px; display:grid; place-items:center; font-size:24px; background:var(--surface-2); flex-shrink:0}
+  .cinfo{flex:1; min-width:0}
+  .cinfo .cn{font-weight:650; font-size:14px}
+  .cinfo .cp{color:var(--ink-2); font-size:13px}
+  .stepper{display:flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:999px; overflow:hidden; flex-shrink:0}
+  .stepper button{width:30px; height:30px; border:none; background:var(--surface); color:var(--ink); font-size:17px; display:grid; place-items:center}
+  .stepper button:hover{background:var(--surface-2)}
+  .stepper .q{min-width:26px; text-align:center; font-weight:700; font-size:14px}
+  .empty{display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; color:var(--ink-3); gap:10px; padding:40px 20px}
+  .empty .ee{font-size:52px}
+  .drawer-foot{border-top:1px solid var(--line); padding:16px 18px}
+  .brk{display:flex; justify-content:space-between; font-size:14px; color:var(--ink-2); padding:5px 0}
+  .brk.total{color:var(--ink); font-weight:800; font-size:17px; border-top:1px solid var(--line); margin-top:6px; padding-top:12px}
+  .cta{
+    width:100%; border:none; border-radius:13px; background:var(--brand); color:var(--on-brand);
+    padding:15px; font-size:15.5px; font-weight:800; margin-top:12px; box-shadow:var(--shadow-sm);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .cta:hover{background:var(--brand-strong)}
+  .cta:disabled{background:var(--surface-2); color:var(--ink-3); cursor:not-allowed}
+
+  /* ---------- Checkout ---------- */
+  .co-grid{display:grid; grid-template-columns:1fr 360px; gap:26px; align-items:start; margin-top:14px}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden}
+  .card .ch{padding:16px 18px; border-bottom:1px solid var(--line); font-weight:800; font-size:15px; display:flex; align-items:center; gap:9px}
+  .card .cb{padding:16px 18px}
+  .row{display:flex; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .row .ri{width:38px; height:38px; border-radius:10px; background:var(--surface-2); display:grid; place-items:center; font-size:18px; flex-shrink:0}
+  .row .rc{flex:1; min-width:0}
+  .row .rc .r1{font-weight:650; font-size:14.5px}
+  .row .rc .r2{color:var(--ink-2); font-size:13px}
+  .row .redit{color:var(--brand-strong); font-weight:700; font-size:13px; background:none; border:none}
+  .tips{display:flex; gap:8px; flex-wrap:wrap}
+  .tip{
+    flex:1; min-width:64px; border:1px solid var(--line); background:var(--surface); color:var(--ink);
+    border-radius:11px; padding:11px 8px; font-weight:700; font-size:14px; text-align:center;
+  }
+  .tip[aria-pressed="true"]{border-color:var(--brand); background:var(--brand-tint); color:var(--brand-strong)}
+  .tip small{display:block; color:var(--ink-3); font-weight:600; font-size:11px}
+  .tip[aria-pressed="true"] small{color:var(--brand-strong)}
+  .co-summary{position:sticky; top:86px}
+  .co-items{max-height:230px; overflow-y:auto}
+  .co-item{display:flex; justify-content:space-between; gap:10px; font-size:14px; padding:7px 0}
+  .co-item .qn{color:var(--ink-2)}
+  .co-item .qn b{color:var(--ink); font-weight:700}
+
+  /* ---------- Tracking / phone ---------- */
+  body.tracking-mode{background:
+    radial-gradient(1200px 600px at 50% -5%, color-mix(in srgb, var(--brand) 12%, var(--bg)), var(--bg));
+  }
+  body.tracking-mode #topbar{display:none}
+  .stage{min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:26px 16px 40px}
+  .stage-note{color:var(--ink-2); font-size:13.5px; text-align:center; max-width:360px}
+  .stage-note b{color:var(--ink)}
+  .phone{
+    width:390px; max-width:100%; height:min(830px, calc(100vh - 150px)); background:#000;
+    border-radius:52px; padding:13px; box-shadow:0 0 0 2px rgba(255,255,255,.06), var(--shadow-lg);
+    position:relative; flex-shrink:0;
+  }
+  .phone .side{position:absolute; width:3px; background:#2a2a2a; border-radius:2px}
+  .phone .side.p{right:-3px; top:170px; height:70px}
+  .phone .side.v1{left:-3px; top:150px; height:36px}
+  .phone .side.v2{left:-3px; top:200px; height:58px}
+  .screen{
+    width:100%; height:100%; background:var(--surface); border-radius:40px; overflow:hidden;
+    position:relative; display:flex; flex-direction:column;
+  }
+  .statusbar{
+    display:flex; align-items:center; justify-content:space-between; padding:14px 26px 6px;
+    font-size:14px; font-weight:700; flex-shrink:0; position:relative; z-index:5; color:var(--ink);
+  }
+  .statusbar .si{display:flex; align-items:center; gap:6px}
+  .island{position:absolute; left:50%; top:12px; transform:translateX(-50%); width:96px; height:28px; background:#000; border-radius:999px; z-index:6}
+  .battery{width:22px; height:11px; border:1.5px solid var(--ink); border-radius:3px; position:relative; padding:1.5px}
+  .battery::after{content:""; position:absolute; right:-3px; top:3px; width:2px; height:5px; background:var(--ink); border-radius:1px}
+  .battery i{display:block; height:100%; width:75%; background:var(--ink); border-radius:1px}
+  .signal{display:flex; align-items:flex-end; gap:2px; height:11px}
+  .signal b{width:3px; background:var(--ink); border-radius:1px}
+  .signal b:nth-child(1){height:4px}.signal b:nth-child(2){height:6px}.signal b:nth-child(3){height:8px}.signal b:nth-child(4){height:11px}
+
+  .track{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch}
+  .track::-webkit-scrollbar{width:0}
+  .map-wrap{position:relative; height:230px; background:var(--map-bg)}
+  .map{width:100%; height:100%; display:block}
+  .marker-emoji{font-size:15px}
+  .eta-card{
+    margin:-30px 16px 0; position:relative; z-index:3; background:var(--surface); border:1px solid var(--line);
+    border-radius:18px; padding:18px; box-shadow:var(--shadow);
+  }
+  .eta-top{display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+  .eta-big{font-size:24px; font-weight:850; letter-spacing:-.02em}
+  .eta-sub{color:var(--ink-2); font-size:13px; font-weight:600}
+  .pbar{height:7px; border-radius:999px; background:var(--surface-2); margin-top:14px; overflow:hidden}
+  .pfill{height:100%; width:5%; background:var(--brand); border-radius:999px; transition:width .6s ease}
+  .status-line{margin-top:12px; font-size:14px; font-weight:650; display:flex; align-items:center; gap:8px}
+  .status-line .sdot{width:9px; height:9px; border-radius:50%; background:var(--brand)}
+  .steps{margin:16px; display:flex; flex-direction:column; gap:0}
+  .step{display:flex; gap:13px; align-items:flex-start}
+  .step .sled{display:flex; flex-direction:column; align-items:center; align-self:stretch}
+  .step .sic{width:30px; height:30px; border-radius:999px; background:var(--surface-2); color:var(--ink-3); display:grid; place-items:center; font-size:14px; flex-shrink:0; border:2px solid transparent}
+  .step .sbar{width:2px; flex:1; background:var(--line); min-height:16px; margin:3px 0}
+  .step:last-child .sbar{display:none}
+  .step .stxt{padding-bottom:16px}
+  .step .st1{font-weight:700; font-size:14px}
+  .step .st2{color:var(--ink-3); font-size:12.5px}
+  .step.done .sic{background:var(--brand); color:var(--on-brand)}
+  .step.active .sic{background:var(--brand-tint); color:var(--brand-strong); border-color:var(--brand)}
+  .step.active .st1{color:var(--brand-strong)}
+  .step.done .sbar{background:var(--brand)}
+
+  .driver{margin:0 16px 16px; background:var(--surface-2); border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px}
+  .davatar{width:48px; height:48px; border-radius:999px; background:linear-gradient(135deg,#ffb27a,#ff7e5f); display:grid; place-items:center; font-size:26px; flex-shrink:0; box-shadow:var(--shadow-sm)}
+  .dinfo{flex:1; min-width:0}
+  .dinfo .dn{font-weight:750; font-size:14.5px; display:flex; align-items:center; gap:6px}
+  .dinfo .dn .dr{display:inline-flex; align-items:center; gap:3px; font-size:12px; color:var(--ink-2); font-weight:650}
+  .dinfo .dn .dr svg{color:var(--star)}
+  .dinfo .dc{color:var(--ink-2); font-size:12.5px}
+  .dact{display:flex; gap:8px}
+  .dact button{width:40px; height:40px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--ink); display:grid; place-items:center; font-size:17px}
+  .dact button:hover{background:var(--brand); color:var(--on-brand); border-color:var(--brand)}
+  .osum{margin:0 16px 26px; border:1px solid var(--line); border-radius:16px; overflow:hidden}
+  .osum .oh{padding:13px 15px; font-weight:750; font-size:14px; border-bottom:1px solid var(--line); background:var(--surface-2); display:flex; justify-content:space-between}
+  .osum .ob{padding:6px 15px 13px}
+  .osum .oi{display:flex; justify-content:space-between; font-size:13.5px; padding:6px 0; color:var(--ink-2)}
+  .osum .oi b{color:var(--ink); font-weight:700}
+  .stage-reset{
+    border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px;
+    padding:12px 22px; font-weight:750; font-size:14.5px; box-shadow:var(--shadow-sm);
+  }
+  .stage-reset:hover{border-color:var(--ink-3)}
+
+  /* car pulse */
+  @media (prefers-reduced-motion: no-preference){
+    .carpulse{transform-box:fill-box; transform-origin:center; animation:pulse 1.8s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:.35; r:16}50%{opacity:0; r:26}}
+    .sdot{animation:blink 1.4s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .celebrate{animation:pop .5s ease}
+    @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+  }
+
+  /* toast */
+  #toast{
+    position:fixed; left:50%; bottom:30px; transform:translate(-50%,140%); z-index:80;
+    background:var(--ink); color:var(--bg); padding:12px 18px; border-radius:12px; font-size:14px; font-weight:600;
+    box-shadow:var(--shadow-lg); transition:transform .3s cubic-bezier(.2,.8,.2,1); max-width:90vw; text-align:center;
+  }
+  #toast.show{transform:translate(-50%,0)}
+
+  /* responsive */
+  @media (max-width:820px){
+    .co-grid{grid-template-columns:1fr}
+    .co-summary{position:static}
+  }
+  @media (max-width:560px){
+    .topbar-in{padding:10px 14px; gap:10px}
+    .brand{font-size:19px}
+    .demo-pill{display:none}
+    .loc{max-width:150px; font-size:12.5px; padding:7px 10px}
+    .cartbtn span.ct{display:none}
+    .wrap{padding:0 14px}
+    .mthumb{width:92px; height:92px; font-size:38px}
+    .phone{border-radius:0; padding:0; height:100vh; width:100%; box-shadow:none}
+    .phone .side{display:none}
+    .screen{border-radius:0}
+    .stage{padding:0; min-height:100vh; gap:0}
+    .stage-note{display:none}
+    body.tracking-mode .float-reset{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; z-index:70}
+    .stage-reset{box-shadow:var(--shadow-lg)}
+  }
+</style>
+
+<header id="topbar">
+  <div class="topbar-in">
+    <button class="brand" onclick="goHome()" aria-label="EatsNow home">
+      <span class="mark">🥡</span><span>Eats<em>Now</em></span>
+    </button>
+    <span class="demo-pill">Demo</span>
+    <button class="loc" onclick="toast('📍 Demo address — this is a fake app')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <span class="lt"><small>Deliver to</small><br>123 Market St</span>
+    </button>
+    <div class="spacer"></div>
+    <button class="cartbtn" onclick="openCart()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H2"/></svg>
+      <span class="ct">Cart</span>
+      <span class="cc" data-cart-count>0</span>
+    </button>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<div id="overlay" onclick="closeCart()"></div>
+<aside id="drawer" aria-label="Your cart" aria-hidden="true">
+  <div class="drawer-head">
+    <h3>Your cart</h3>
+    <button class="iconbtn" onclick="closeCart()" aria-label="Close cart">✕</button>
+  </div>
+  <div id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Data ---------------- */
+  const RESTAURANTS = [
+    { id:'burger', name:'Burger Barn', cuisine:'American', tags:['Burgers'], rating:4.8, time:'15–25', fee:0.99, emoji:'🍔', g:['#ffb648','#ff5e3a'], promo:'20% off over $25',
+      menu:[
+        {section:'Most popular', hint:'What everyone is ordering', items:[
+          {n:'Classic Cheeseburger', d:'Beef patty, aged cheddar, lettuce, tomato, house sauce', p:8.99, e:'🍔'},
+          {n:'Double Bacon Stack', d:'Two smashed patties, smoked bacon, American cheese', p:11.49, e:'🥓'},
+          {n:'Crispy Chicken Sandwich', d:'Buttermilk-fried chicken, pickles, spicy mayo', p:9.49, e:'🍗'},
+        ]},
+        {section:'Sides & drinks', items:[
+          {n:'Golden Fries', d:'Skin-on, sea salt, crispy edges', p:3.99, e:'🍟'},
+          {n:'Onion Rings', d:'Beer-battered with ranch dip', p:4.49, e:'🧅'},
+          {n:'Chocolate Shake', d:'Hand-spun, topped with whipped cream', p:4.99, e:'🥤'},
+        ]},
+      ]},
+    { id:'sushi', name:'Sakura Sushi', cuisine:'Japanese', tags:['Sushi'], rating:4.7, time:'25–35', fee:2.49, emoji:'🍣', g:['#ff8fab','#c9184a'], promo:'Free miso soup',
+      menu:[
+        {section:'Rolls', hint:'Rolled fresh to order', items:[
+          {n:'Salmon Avocado Roll', d:'Fresh salmon, avocado, sesame, 8 pcs', p:9.50, e:'🍣'},
+          {n:'Spicy Tuna Roll', d:'Tuna, sriracha mayo, cucumber, 8 pcs', p:10.25, e:'🌶️'},
+          {n:'Dragon Roll', d:'Eel, avocado, tempura shrimp, 8 pcs', p:13.75, e:'🐉'},
+        ]},
+        {section:'Extras', items:[
+          {n:'Edamame', d:'Steamed, sea salt', p:4.50, e:'🫛'},
+          {n:'Miso Soup', d:'Tofu, seaweed, scallion', p:3.25, e:'🍲'},
+          {n:'Green Tea', d:'Hot or iced', p:2.50, e:'🍵'},
+        ]},
+      ]},
+    { id:'pizza', name:'Napoli Pizza', cuisine:'Italian', tags:['Pizza'], rating:4.6, time:'20–30', fee:1.49, emoji:'🍕', g:['#ff9a5a','#e63946'], promo:'2 for 1 Tuesdays',
+      menu:[
+        {section:'Pizzas', hint:'Wood-fired, 12 inch', items:[
+          {n:'Margherita', d:'San Marzano tomato, fresh mozzarella, basil', p:12.00, e:'🍕'},
+          {n:'Pepperoni', d:'Double pepperoni, mozzarella, oregano', p:13.50, e:'🍕'},
+          {n:'Truffle Mushroom', d:'Wild mushrooms, truffle oil, fontina', p:15.00, e:'🍄'},
+        ]},
+        {section:'Sides', items:[
+          {n:'Garlic Knots', d:'6 pcs, parmesan, marinara dip', p:5.50, e:'🥯'},
+          {n:'Caesar Salad', d:'Romaine, croutons, shaved parmesan', p:7.00, e:'🥗'},
+        ]},
+      ]},
+    { id:'salad', name:'Green Bowl', cuisine:'Healthy', tags:['Healthy'], rating:4.9, time:'10–20', fee:0, emoji:'🥗', g:['#7bd88f','#00a862'], promo:'Free delivery',
+      menu:[
+        {section:'Signature bowls', hint:'Built fresh, never frozen', items:[
+          {n:'Harvest Grain Bowl', d:'Quinoa, roasted veg, avocado, tahini', p:11.50, e:'🥗'},
+          {n:'Chicken Power Bowl', d:'Grilled chicken, kale, sweet potato', p:12.75, e:'🍗'},
+          {n:'Poke Bowl', d:'Ahi tuna, edamame, mango, sushi rice', p:13.90, e:'🐟'},
+        ]},
+        {section:'Add-ons', items:[
+          {n:'Green Smoothie', d:'Spinach, banana, mango, oat milk', p:6.50, e:'🥤'},
+          {n:'Kombucha', d:'Ginger & lemon', p:4.25, e:'🧃'},
+        ]},
+      ]},
+    { id:'taco', name:'Taco Fiesta', cuisine:'Mexican', tags:['Mexican'], rating:4.5, time:'15–25', fee:1.99, emoji:'🌮', g:['#ffd166','#f77f00'], promo:'Taco Tuesday deals',
+      menu:[
+        {section:'Tacos', hint:'Served on warm corn tortillas', items:[
+          {n:'Al Pastor Tacos', d:'Marinated pork, pineapple, onion, 3 pcs', p:9.75, e:'🌮'},
+          {n:'Carne Asada Tacos', d:'Grilled steak, cilantro, lime, 3 pcs', p:10.50, e:'🥩'},
+          {n:'Veggie Tacos', d:'Roasted peppers, black beans, avocado, 3 pcs', p:8.90, e:'🫑'},
+        ]},
+        {section:'Extras', items:[
+          {n:'Loaded Nachos', d:'Cheese, jalapeños, guac, pico', p:8.25, e:'🧀'},
+          {n:'Churros', d:'Cinnamon sugar, chocolate dip', p:5.00, e:'🍩'},
+          {n:'Horchata', d:'Cinnamon rice milk', p:3.75, e:'🥛'},
+        ]},
+      ]},
+    { id:'dessert', name:'Sweet Tooth', cuisine:'Bakery', tags:['Desserts'], rating:4.8, time:'15–20', fee:0.99, emoji:'🍰', g:['#f4a6ff','#b14aed'], promo:'Buy 6, get 12',
+      menu:[
+        {section:'Bakes', hint:'Baked fresh this morning', items:[
+          {n:'Molten Lava Cake', d:'Warm chocolate center, vanilla gelato', p:7.50, e:'🍫'},
+          {n:'NY Cheesecake', d:'Graham crust, berry compote', p:6.75, e:'🍰'},
+          {n:'Cookie Box', d:'Half-dozen warm chocolate chip', p:8.00, e:'🍪'},
+        ]},
+        {section:'Sips', items:[
+          {n:'Strawberry Milkshake', d:'Real strawberries, whipped cream', p:5.50, e:'🥤'},
+          {n:'Hot Cocoa', d:'Marshmallows, dark chocolate', p:4.00, e:'☕'},
+        ]},
+      ]},
+    { id:'chinese', name:'Dragon Wok', cuisine:'Chinese', tags:['Chinese'], rating:4.4, time:'20–30', fee:1.49, emoji:'🥡', g:['#ff7a59','#d90429'], promo:'Free spring rolls',
+      menu:[
+        {section:'Mains', hint:'Wok-tossed to order', items:[
+          {n:'Kung Pao Chicken', d:'Peanuts, chili, bell pepper, jasmine rice', p:11.25, e:'🍗'},
+          {n:'Beef & Broccoli', d:'Tender beef, garlic ginger sauce', p:12.50, e:'🥦'},
+          {n:'Veggie Lo Mein', d:'Egg noodles, mixed vegetables', p:9.75, e:'🍜'},
+        ]},
+        {section:'Starters', items:[
+          {n:'Pork Dumplings', d:'Pan-fried, 6 pcs, soy vinegar', p:6.50, e:'🥟'},
+          {n:'Spring Rolls', d:'Crispy veg, sweet chili, 4 pcs', p:5.25, e:'🥢'},
+        ]},
+      ]},
+    { id:'coffee', name:'Bean & Brew', cuisine:'Café', tags:['Coffee'], rating:4.7, time:'5–15', fee:0.49, emoji:'☕', g:['#c69c6d','#6f4e37'], promo:'2x rewards points',
+      menu:[
+        {section:'Coffee', hint:'Single-origin, roasted locally', items:[
+          {n:'Caramel Latte', d:'Double espresso, steamed milk, caramel', p:5.25, e:'☕'},
+          {n:'Cold Brew', d:'20-hour steep, smooth & bold', p:4.75, e:'🧊'},
+          {n:'Cappuccino', d:'Espresso, velvety microfoam', p:4.50, e:'☕'},
+        ]},
+        {section:'Bites', items:[
+          {n:'Butter Croissant', d:'Flaky, baked fresh daily', p:3.75, e:'🥐'},
+          {n:'Blueberry Muffin', d:'Bursting with real blueberries', p:3.50, e:'🧁'},
+        ]},
+      ]},
+  ];
+
+  const CATEGORIES = [
+    {k:'All', e:'🍽️'},{k:'Burgers', e:'🍔'},{k:'Pizza', e:'🍕'},{k:'Sushi', e:'🍣'},
+    {k:'Healthy', e:'🥗'},{k:'Mexican', e:'🌮'},{k:'Chinese', e:'🥡'},{k:'Desserts', e:'🍰'},{k:'Coffee', e:'☕'},
+  ];
+
+  const SERVICE_FEE = 1.99;
+
+  /* ---------------- State ---------------- */
+  const state = {
+    view:'home', category:'All', query:'', restId:null,
+    cart:{ rid:null, lines:{} }, // lines: key -> {n,p,e,qty}
+    tip:3, order:null, timer:null,
+  };
+
+  const $ = s => document.querySelector(s);
+  const app = $('#app');
+  const money = n => '$' + n.toFixed(2);
+  const getRest = id => RESTAURANTS.find(r => r.id === id);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function getItem(r, key){
+    const [s,i] = key.split('-').map(Number);
+    return r.menu[s].items[i];
+  }
+  function cartTotals(){
+    let count=0, subtotal=0;
+    for(const k in state.cart.lines){ const l=state.cart.lines[k]; count+=l.qty; subtotal+=l.qty*l.p; }
+    return {count, subtotal};
+  }
+  function lineQty(key){ const l=state.cart.lines[key]; return l?l.qty:0; }
+
+  /* ---------------- Navigation ---------------- */
+  function render(){
+    document.body.classList.toggle('tracking-mode', state.view==='tracking');
+    if(state.view==='home') app.innerHTML = viewHome();
+    else if(state.view==='restaurant') app.innerHTML = viewRestaurant();
+    else if(state.view==='checkout') app.innerHTML = viewCheckout();
+    else if(state.view==='tracking'){ app.innerHTML = viewTracking(); startTracking(); }
+    window.scrollTo(0,0);
+    updateCounts();
+  }
+  window.goHome = function(){ if(state.timer){clearInterval(state.timer); state.timer=null;} state.view='home'; render(); };
+  window.openRestaurant = function(id){ state.restId=id; state.view='restaurant'; render(); };
+  window.goCheckout = function(){ closeCart(); state.view='checkout'; render(); };
+
+  /* ---------------- Home ---------------- */
+  function viewHome(){
+    const chips = CATEGORIES.map(c =>
+      `<button class="chip" aria-pressed="${c.k===state.category}" onclick="setCategory('${c.k}')"><span class="ce">${c.e}</span>${c.k}</button>`
+    ).join('');
+
+    let list = RESTAURANTS.slice();
+    if(state.category!=='All') list = list.filter(r => r.tags.includes(state.category));
+    if(state.query){
+      const q = state.query.toLowerCase();
+      list = list.filter(r => r.name.toLowerCase().includes(q) || r.cuisine.toLowerCase().includes(q) || r.tags.join(' ').toLowerCase().includes(q));
+    }
+
+    const cards = list.map(r => `
+      <button class="rcard" onclick="openRestaurant('${r.id}')">
+        <div class="banner" style="--g1:${r.g[0]};--g2:${r.g[1]}">
+          <span class="be">${r.emoji}</span>
+          <span class="promo">${r.promo}</span>
+          <span class="fav">🤍</span>
+        </div>
+        <div class="rname"><span>${esc(r.name)}</span>
+          <span class="rrate"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg>${r.rating}</span>
+        </div>
+        <div class="rmeta">
+          <span>${esc(r.cuisine)}</span><span class="dot"></span>
+          <span>${r.time} min</span><span class="dot"></span>
+          <span class="${r.fee===0?'free':''}">${r.fee===0?'Free delivery':money(r.fee)+' delivery'}</span>
+        </div>
+      </button>`).join('');
+
+    const empty = list.length ? '' : `<div style="padding:40px 0; color:var(--ink-3); text-align:center">No spots match “${esc(state.query||state.category)}”. Try another search.</div>`;
+
+    return `
+    <div class="page">
+      <div class="wrap">
+        <section class="hero">
+          <h1>What are you craving today?</h1>
+          <label class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="text" placeholder="Search restaurants or cuisines" value="${esc(state.query)}" oninput="setQuery(this.value)" aria-label="Search">
+          </label>
+          <div class="chips">${chips}</div>
+        </section>
+        <h2 class="sec-title">${state.category==='All'?'Featured near you':state.category} <span style="color:var(--ink-3);font-weight:600;font-size:15px">· ${list.length} places</span></h2>
+        <div class="grid">${cards}</div>
+        ${empty}
+      </div>
+    </div>`;
+  }
+  window.setCategory = function(k){ state.category=k; render(); };
+  let qTimer=null;
+  window.setQuery = function(v){ state.query=v; clearTimeout(qTimer); qTimer=setTimeout(()=>{ if(state.view==='home'){ const grid=$('.grid'); if(grid){ render(); const inp=$('.search input'); if(inp){inp.focus(); inp.setSelectionRange(v.length,v.length);} } } },120); };
+
+  /* ---------------- Restaurant ---------------- */
+  function viewRestaurant(){
+    const r = getRest(state.restId);
+    const sections = r.menu.map((sec, si) => {
+      const rows = sec.items.map((it, ii) => {
+        const key = si+'-'+ii;
+        return `
+        <div class="mrow">
+          <div class="minfo">
+            <div class="mname">${esc(it.n)}</div>
+            <div class="mdesc">${esc(it.d)}</div>
+            <div class="mprice tnum">${money(it.p)}</div>
+          </div>
+          <div class="mthumb" style="--g1:${r.g[0]};--g2:${r.g[1]}">${it.e}
+            <span class="qbadge" data-badge="${key}">${lineQty(key)}</span>
+            <button class="addbtn" onclick="addItem('${key}')" aria-label="Add ${esc(it.n)}">+</button>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div class="menu-sec"><h3>${esc(sec.section)}</h3>${sec.hint?`<div class="subhint">${esc(sec.hint)}</div>`:''}${rows}</div>`;
+    }).join('');
+
+    return `
+    <div class="page">
+      <div class="wrap">
+        <div class="backbar"><button class="backbtn" onclick="goHome()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg> All restaurants
+        </button></div>
+        <div class="rhero" style="--g1:${r.g[0]};--g2:${r.g[1]}"><span class="be">${r.emoji}</span></div>
+        <div class="rhead">
+          <h2>${esc(r.name)}</h2>
+          <div class="rmeta">
+            <span class="rrate"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg>${r.rating}</span>
+            <span class="dot"></span><span>${esc(r.cuisine)}</span>
+            <span class="dot"></span><span>${r.time} min</span>
+            <span class="dot"></span><span class="${r.fee===0?'free':''}">${r.fee===0?'Free delivery':money(r.fee)+' delivery'}</span>
+          </div>
+        </div>
+        ${sections}
+      </div>
+    </div>
+    <div id="viewCartBar">
+      <button class="vcbtn" onclick="openCart()">
+        <span class="vc-count" data-cart-count>0</span>
+        <span>View cart</span>
+        <span class="tnum" data-cart-total>$0.00</span>
+      </button>
+    </div>`;
+  }
+
+  window.addItem = function(key){
+    const r = getRest(state.restId);
+    if(state.cart.rid && state.cart.rid !== r.id && cartTotals().count>0){
+      if(!confirm('Your cart has items from '+getRest(state.cart.rid).name+'. Start a new cart with '+r.name+'?')) return;
+      state.cart.lines = {};
+    }
+    state.cart.rid = r.id;
+    const it = getItem(r, key);
+    const l = state.cart.lines[key];
+    if(l) l.qty++;
+    else state.cart.lines[key] = { n:it.n, p:it.p, e:it.e, qty:1 };
+    updateCounts();
+    const bar = $('#viewCartBar'); if(bar && !bar.classList.contains('show')) toast('Added '+it.n+' 🛒');
+  };
+
+  window.changeQty = function(key, d){
+    const l = state.cart.lines[key];
+    if(!l) return;
+    l.qty += d;
+    if(l.qty<=0) delete state.cart.lines[key];
+    if(cartTotals().count===0){ state.cart.rid=null; }
+    updateCounts();
+    renderDrawer();
+    if(state.view==='checkout') render();
+  };
+
+  /* ---------------- Cart drawer ---------------- */
+  window.openCart = function(){
+    renderDrawer();
+    $('#overlay').classList.add('show');
+    $('#drawer').classList.add('show');
+    $('#drawer').setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  };
+  window.closeCart = function(){
+    $('#overlay').classList.remove('show');
+    $('#drawer').classList.remove('show');
+    $('#drawer').setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  };
+
+  function renderDrawer(){
+    const body = $('#drawerBody'), foot = $('#drawerFoot');
+    const {count, subtotal} = cartTotals();
+    if(count===0){
+      body.innerHTML = `<div class="empty"><div class="ee">🛒</div><div><b style="color:var(--ink)">Your cart is empty</b><br>Add some tasty items to get started.</div></div>`;
+      foot.innerHTML = `<button class="cta" disabled>Add items to continue</button>`;
+      return;
+    }
+    const r = getRest(state.cart.rid);
+    const lines = Object.keys(state.cart.lines).map(k => {
+      const l = state.cart.lines[k];
+      return `
+      <div class="cline">
+        <div class="cthumb">${l.e}</div>
+        <div class="cinfo"><div class="cn">${esc(l.n)}</div><div class="cp tnum">${money(l.p)}</div></div>
+        <div class="stepper">
+          <button onclick="changeQty('${k}',-1)" aria-label="Remove one">−</button>
+          <span class="q tnum">${l.qty}</span>
+          <button onclick="changeQty('${k}',1)" aria-label="Add one">+</button>
+        </div>
+      </div>`;
+    }).join('');
+    body.innerHTML = `<div class="drawer-rest">🍴 From ${esc(r.name)}</div>${lines}`;
+
+    const delivery = r.fee, total = subtotal + delivery + SERVICE_FEE + state.tip;
+    foot.innerHTML = `
+      <div class="brk"><span>Subtotal</span><span class="tnum">${money(subtotal)}</span></div>
+      <div class="brk"><span>Delivery</span><span class="tnum">${delivery===0?'Free':money(delivery)}</span></div>
+      <div class="brk"><span>Service fee</span><span class="tnum">${money(SERVICE_FEE)}</span></div>
+      <div class="brk total"><span>Total</span><span class="tnum">${money(total)}</span></div>
+      <button class="cta" onclick="goCheckout()">Go to checkout
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+      </button>`;
+  }
+
+  function updateCounts(){
+    const {count, subtotal} = cartTotals();
+    document.querySelectorAll('[data-cart-count]').forEach(el => el.textContent = count);
+    document.querySelectorAll('[data-cart-total]').forEach(el => el.textContent = money(subtotal));
+    const bar = $('#viewCartBar'); if(bar) bar.classList.toggle('show', count>0);
+    document.querySelectorAll('[data-badge]').forEach(el => {
+      const q = lineQty(el.getAttribute('data-badge'));
+      el.textContent = q; el.classList.toggle('show', q>0);
+    });
+  }
+
+  /* ---------------- Checkout ---------------- */
+  function viewCheckout(){
+    const {count, subtotal} = cartTotals();
+    if(count===0){
+      return `<div class="wrap page"><div class="backbar"><button class="backbtn" onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg> Back</button></div>
+        <div class="empty" style="height:50vh"><div class="ee">🛒</div><b style="color:var(--ink)">Your cart is empty</b><button class="stage-reset" onclick="goHome()">Browse restaurants</button></div></div>`;
+    }
+    const r = getRest(state.cart.rid);
+    const delivery = r.fee, total = subtotal + delivery + SERVICE_FEE + state.tip;
+    const tips = [0,2,3,5];
+    const tipBtns = tips.map(t => `<button class="tip" aria-pressed="${t===state.tip}" onclick="setTip(${t})">${t===0?'None':'$'+t}<small>${t===0?'No tip':(t===3?'Popular':'Thanks!')}</small></button>`).join('');
+    const items = Object.keys(state.cart.lines).map(k => {
+      const l = state.cart.lines[k];
+      return `<div class="co-item"><span class="qn"><b>${l.qty}×</b> ${esc(l.n)}</span><span class="tnum">${money(l.p*l.qty)}</span></div>`;
+    }).join('');
+
+    return `
+    <div class="wrap page">
+      <div class="backbar"><button class="backbtn" onclick="openRestaurant('${r.id}')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg> Back to ${esc(r.name)}
+      </button></div>
+      <h2 class="sec-title" style="margin-top:8px">Checkout</h2>
+      <div class="co-grid">
+        <div style="display:flex; flex-direction:column; gap:18px">
+          <div class="card">
+            <div class="ch">📍 Delivery details</div>
+            <div class="cb">
+              <div class="row"><div class="ri">🏠</div><div class="rc"><div class="r1">123 Market St, Apt 4B</div><div class="r2">Leave at door · “Ring the bell”</div></div><button class="redit" onclick="toast('Demo address 🙂')">Edit</button></div>
+              <div class="row"><div class="ri">⚡</div><div class="rc"><div class="r1">Standard · ASAP</div><div class="r2">Estimated ${r.time} min</div></div><button class="redit" onclick="toast('Only ASAP in this demo')">Change</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch">💳 Payment</div>
+            <div class="cb">
+              <div class="row"><div class="ri">💳</div><div class="rc"><div class="r1">Visa •••• 4242</div><div class="r2">Demo card — you won’t be charged</div></div><button class="redit" onclick="toast('No real payment here — it’s fake 👍')">Change</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch">💚 Add a tip</div>
+            <div class="cb"><div class="tips">${tipBtns}</div></div>
+          </div>
+        </div>
+
+        <div class="card co-summary">
+          <div class="ch">🧾 ${esc(r.name)}</div>
+          <div class="cb">
+            <div class="co-items">${items}</div>
+            <div style="border-top:1px solid var(--line); margin-top:10px; padding-top:10px">
+              <div class="brk"><span>Subtotal</span><span class="tnum">${money(subtotal)}</span></div>
+              <div class="brk"><span>Delivery</span><span class="tnum">${delivery===0?'Free':money(delivery)}</span></div>
+              <div class="brk"><span>Service fee</span><span class="tnum">${money(SERVICE_FEE)}</span></div>
+              <div class="brk"><span>Tip</span><span class="tnum">${money(state.tip)}</span></div>
+              <div class="brk total"><span>Total</span><span class="tnum">${money(total)}</span></div>
+            </div>
+            <button class="cta" onclick="placeOrder()">Place order · ${money(total)}</button>
+            <div style="text-align:center; color:var(--ink-3); font-size:12px; margin-top:10px">🔒 This is a demo — no real order is placed</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+  window.setTip = function(t){ state.tip=t; render(); };
+
+  /* ---------------- Place order → tracking ---------------- */
+  window.placeOrder = function(){
+    const r = getRest(state.cart.rid);
+    const {subtotal} = cartTotals();
+    const total = subtotal + r.fee + SERVICE_FEE + state.tip;
+    state.order = {
+      rest:r, lines:JSON.parse(JSON.stringify(state.cart.lines)),
+      subtotal, delivery:r.fee, tip:state.tip, total,
+    };
+    // reset cart for next time
+    state.cart = { rid:null, lines:{} };
+    state.view='tracking';
+    render();
+  };
+
+  const DRIVERS = [
+    {n:'Marcus D.', car:'Toyota Prius · Silver', r:4.9, a:'🧑🏽'},
+    {n:'Ava R.', car:'Honda Civic · Blue', r:4.8, a:'👩🏼'},
+    {n:'Diego S.', car:'Ford Focus · Red', r:5.0, a:'🧑🏻'},
+    {n:'Priya K.', car:'Nissan Leaf · White', r:4.9, a:'👩🏽'},
+  ];
+
+  function viewTracking(){
+    const o = state.order;
+    const d = DRIVERS[Math.floor(Math.random()*DRIVERS.length)];
+    state._driver = d;
+    const now = new Date();
+    const clock = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+    const itemCount = Object.values(o.lines).reduce((a,l)=>a+l.qty,0);
+    const itemsHtml = Object.values(o.lines).map(l=>`<div class="oi"><span>${l.qty}× ${esc(l.n)}</span><b class="tnum">${money(l.p*l.qty)}</b></div>`).join('');
+
+    const steps = [
+      {ic:'✓', t1:'Order confirmed', t2:'We sent it to '+o.rest.name},
+      {ic:'👨‍🍳', t1:'Preparing your food', t2:'The kitchen is on it'},
+      {ic:'🛍️', t1:'Picked up', t2:d.n+' has your order'},
+      {ic:'🛵', t1:'On the way', t2:'Heading to 123 Market St'},
+    ];
+    const stepsHtml = steps.map((s,i)=>`
+      <div class="step" data-step="${i}">
+        <div class="sled"><div class="sic">${s.ic}</div><div class="sbar"></div></div>
+        <div class="stxt"><div class="st1">${s.t1}</div><div class="st2">${esc(s.t2)}</div></div>
+      </div>`).join('');
+
+    return `
+    <div class="stage">
+      <div class="phone">
+        <span class="side p"></span><span class="side v1"></span><span class="side v2"></span>
+        <div class="screen">
+          <div class="island"></div>
+          <div class="statusbar">
+            <span class="tnum">${clock}</span>
+            <div class="si">
+              <span class="signal"><b></b><b></b><b></b><b></b></span>
+              <span style="font-size:12px; font-weight:800">5G</span>
+              <span class="battery"><i></i></span>
+            </div>
+          </div>
+          <div class="track">
+            <div class="map-wrap">
+              <svg class="map" viewBox="0 0 390 230" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <rect x="0" y="0" width="390" height="230" fill="var(--map-bg)"/>
+                <rect x="0" y="150" width="390" height="26" fill="var(--map-road)"/>
+                <rect x="0" y="60" width="390" height="18" fill="var(--map-road)"/>
+                <rect x="90" y="0" width="24" height="230" fill="var(--map-road)"/>
+                <rect x="270" y="0" width="20" height="230" fill="var(--map-road)"/>
+                <rect x="18" y="90" width="56" height="46" rx="5" fill="var(--map-block)"/>
+                <rect x="128" y="86" width="120" height="52" rx="5" fill="var(--map-park)"/>
+                <rect x="128" y="188" width="120" height="34" rx="5" fill="var(--map-block)"/>
+                <rect x="308" y="90" width="66" height="46" rx="5" fill="var(--map-water)"/>
+                <rect x="308" y="150" width="66" height="60" rx="5" fill="var(--map-block)"/>
+                <path id="route" d="M52 198 C 100 190 100 120 160 112 S 250 120 300 78 L 336 48" fill="none" stroke="var(--brand)" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 11" opacity="0.9"/>
+                <g>
+                  <circle cx="52" cy="198" r="11" fill="var(--surface)" stroke="var(--brand)" stroke-width="3"/>
+                  <text x="52" y="203" text-anchor="middle" class="marker-emoji">🍴</text>
+                </g>
+                <g>
+                  <circle cx="336" cy="48" r="11" fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5"/>
+                  <text x="336" y="53" text-anchor="middle" class="marker-emoji">🏠</text>
+                </g>
+                <circle id="carpulse" class="carpulse" r="16" fill="var(--brand)" opacity="0.3"/>
+                <g id="car">
+                  <circle r="15" fill="var(--brand)" stroke="var(--surface)" stroke-width="3"/>
+                  <text x="0" y="6" text-anchor="middle" font-size="17">🛵</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="eta-card">
+              <div class="eta-top">
+                <div><div class="eta-big" id="etaBig">Arriving in 18 min</div><div class="eta-sub" id="etaSub">Order #EN-${Math.floor(1000+Math.random()*9000)} · ${itemCount} items</div></div>
+                <div style="font-size:30px" id="etaEmoji">🛵</div>
+              </div>
+              <div class="pbar"><div class="pfill" id="pfill"></div></div>
+              <div class="status-line"><span class="sdot"></span><span id="statusText">Order received</span></div>
+            </div>
+
+            <div class="steps">${stepsHtml}</div>
+
+            <div class="driver">
+              <div class="davatar">${d.a}</div>
+              <div class="dinfo">
+                <div class="dn">${esc(d.n)} <span class="dr"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg>${d.r}</span></div>
+                <div class="dc">${esc(d.car)}</div>
+              </div>
+              <div class="dact">
+                <button onclick="toast('📞 Demo only — no real driver')" aria-label="Call driver">📞</button>
+                <button onclick="toast('💬 Demo only — say hi to the void')" aria-label="Message driver">💬</button>
+              </div>
+            </div>
+
+            <div class="osum">
+              <div class="oh"><span>Your order</span><span class="tnum">${money(o.total)}</span></div>
+              <div class="ob">
+                ${itemsHtml}
+                <div class="oi" style="border-top:1px solid var(--line); margin-top:4px; padding-top:8px"><span>Delivery + fees + tip</span><b class="tnum">${money(o.delivery+SERVICE_FEE+o.tip)}</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="stage-reset float-reset" onclick="goHome()">← Order something else</button>
+    </div>`;
+  }
+
+  function startTracking(){
+    if(state.timer){ clearInterval(state.timer); state.timer=null; }
+    const routeEl = $('#route'), car = $('#car'), carpulse = $('#carpulse');
+    if(!routeEl) return;
+    const len = routeEl.getTotalLength();
+    const startPt = routeEl.getPointAtLength(0);
+    const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+    const placeCar = frac => {
+      const pt = routeEl.getPointAtLength(len*frac);
+      car.setAttribute('transform', `translate(${pt.x},${pt.y})`);
+      carpulse.setAttribute('cx', pt.x); carpulse.setAttribute('cy', pt.y);
+    };
+    placeCar(0);
+
+    const statusStages = [
+      {p:0.00, s:'Order received'},
+      {p:0.12, s:'Restaurant is preparing your food'},
+      {p:0.40, s:'Driver picked up your order'},
+      {p:0.52, s:'On the way to you'},
+      {p:0.97, s:'Arriving now'},
+    ];
+    const stepThresholds = [0.02, 0.14, 0.40, 0.52]; // when each step becomes active
+    const DURATION = 46000; // ms for the whole demo delivery
+    const t0 = performance.now();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const pfill = $('#pfill'), etaBig = $('#etaBig'), etaSub = $('#etaSub'),
+          statusText = $('#statusText'), etaEmoji = $('#etaEmoji');
+    const stepEls = Array.from(document.querySelectorAll('.step'));
+
+    function frame(){
+      const p = clamp((performance.now()-t0)/DURATION, 0, 1);
+      // route: car sits at restaurant until picked up (0.40), then drives to home by 1.0
+      const routeFrac = clamp((p-0.40)/0.60, 0, 1);
+      placeCar(routeFrac);
+      if(pfill) pfill.style.width = (Math.max(5,p*100)).toFixed(1)+'%';
+
+      // status text
+      let st = statusStages[0].s;
+      for(const ss of statusStages){ if(p>=ss.p) st = ss.s; }
+      if(p>=1) st = 'Delivered — enjoy your food! 🎉';
+      if(statusText) statusText.textContent = st;
+
+      // eta
+      const mins = Math.max(1, Math.round(18*(1-p)));
+      if(etaBig) etaBig.textContent = p>=1 ? 'Delivered! 🎉' : (p>=0.97 ? 'Arriving now' : 'Arriving in '+mins+' min');
+      if(etaEmoji) etaEmoji.textContent = p>=1 ? '🎉' : (p<0.40 ? '👨‍🍳' : '🛵');
+
+      // steps
+      stepEls.forEach((el,i)=>{
+        el.classList.remove('active','done');
+        if(p>=1){ el.classList.add('done'); return; }
+        const start = stepThresholds[i];
+        const next = stepThresholds[i+1] !== undefined ? stepThresholds[i+1] : 1;
+        if(p>=next) el.classList.add('done');
+        else if(p>=start) el.classList.add('active');
+      });
+
+      if(p>=1){
+        clearInterval(state.timer); state.timer=null;
+        if(etaSub) etaSub.textContent = 'Left at your door · Rate your order';
+        if(!reduce && etaEmoji) etaEmoji.classList.add('celebrate');
+        toast('🎉 Your food has arrived! (well… in the demo)');
+      }
+    }
+    frame();
+    state.timer = setInterval(frame, reduce ? 400 : 120);
+  }
+
+  /* ---------------- Toast ---------------- */
+  let toastTimer=null;
+  window.toast = function(msg){
+    const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2600);
+  };
+
+  /* ---------------- Init ---------------- */
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeCart(); });
+  render();
+})();
+</script>

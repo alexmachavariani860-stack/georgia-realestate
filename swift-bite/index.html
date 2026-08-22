@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#121212" />
+    <title>SwiftBite — food, delivered</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a href="#top" class="wordmark" aria-label="SwiftBite home">
+          <span class="mark">s</span><span>swiftbite</span>
+        </a>
+        <button class="location-button" id="locationButton" type="button" aria-label="Change delivery location">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.56 7-12a7 7 0 1 0-14 0c0 6.44 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg>
+          <span><small>Deliver to</small><strong>18 Ruskin St</strong></span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+        </button>
+        <nav class="top-actions" aria-label="Account">
+          <button class="plain-action" type="button">Sign in</button>
+          <button class="cart-button" id="cartButton" type="button" aria-label="Open cart">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.3 10.15a2 2 0 0 0 2 1.55h7.95a2 2 0 0 0 1.95-1.55L21 7H7"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+            <span class="cart-label">Cart</span><b id="cartCount">0</b>
+          </button>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Good food, no waiting around</p>
+            <h1>Your cravings,<br><em>on the way.</em></h1>
+            <p class="hero-subtitle">The neighbourhood’s best kitchens, straight to your door.</p>
+            <label class="search-box" for="foodSearch">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 4.2 4.2"/></svg>
+              <input id="foodSearch" type="search" placeholder="Search dishes, restaurants or cuisines" autocomplete="off" />
+              <kbd>⌘ K</kbd>
+            </label>
+          </div>
+          <div class="hero-image-wrap">
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1100&q=85" alt="A stacked gourmet burger and fries" />
+            <div class="hero-note"><span>25–35 min</span><small>Average delivery</small></div>
+            <div class="hero-spark spark-one">✦</div><div class="hero-spark spark-two">✦</div>
+          </div>
+        </section>
+
+        <section class="content-section categories-section" aria-label="Food categories">
+          <div class="section-heading"><h2>What are you in the mood for?</h2><button class="text-button" type="button" id="seeAllCategories">See all</button></div>
+          <div class="category-row" id="categoryRow">
+            <button class="category-card active" data-category="All"><span class="category-emoji">✨</span><span>All</span></button>
+            <button class="category-card" data-category="Burgers"><span class="category-emoji">🍔</span><span>Burgers</span></button>
+            <button class="category-card" data-category="Pizza"><span class="category-emoji">🍕</span><span>Pizza</span></button>
+            <button class="category-card" data-category="Asian"><span class="category-emoji">🍜</span><span>Asian</span></button>
+            <button class="category-card" data-category="Healthy"><span class="category-emoji">🥗</span><span>Healthy</span></button>
+            <button class="category-card" data-category="Desserts"><span class="category-emoji">🍰</span><span>Desserts</span></button>
+            <button class="category-card" data-category="Coffee"><span class="category-emoji">☕</span><span>Coffee</span></button>
+          </div>
+        </section>
+
+        <section class="content-section offers-section" aria-label="Featured offers">
+          <div class="section-heading"><h2>Made for your Tuesday</h2><span class="tiny-status"><i></i> Live near you</span></div>
+          <div class="offer-grid">
+            <article class="offer-card burnt"><div><p>Save up to</p><strong>40%</strong><span>on first orders</span></div><span class="offer-emoji">🍜</span></article>
+            <article class="offer-card citrus"><div><p>Free delivery</p><strong>for 14 days</strong><span>with SwiftPass</span></div><span class="offer-emoji">🛵</span></article>
+            <article class="offer-card grape"><div><p>Sweet deal</p><strong>2 for 1</strong><span>on selected desserts</span></div><span class="offer-emoji">🍰</span></article>
+          </div>
+        </section>
+
+        <section class="content-section restaurant-section" aria-label="Restaurants">
+          <div class="section-heading"><div><p class="eyebrow section-eyebrow">POPULAR RIGHT NOW</p><h2>Local favourites</h2></div><button class="text-button" type="button" id="viewAll">View all</button></div>
+          <div class="restaurant-grid" id="restaurantGrid"></div>
+        </section>
+
+        <section class="content-section order-banner">
+          <div class="banner-copy"><p class="eyebrow">Dinner, handled</p><h2>Need a little<br>something good?</h2><button class="dark-button" type="button" id="browseButton">Browse restaurants <span>→</span></button></div>
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1050&q=85" alt="Table full of colourful food" />
+        </section>
+      </main>
+
+      <footer><a href="#top" class="wordmark"><span class="mark">s</span><span>swiftbite</span></a><span>Fresh choices. Fast delivery.</span><span>© 2026 SwiftBite</span></footer>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-label="Your order" aria-hidden="true">
+      <div class="drawer-head"><div><p class="eyebrow">YOUR ORDER</p><h2>Your cart</h2></div><button class="icon-button close-panel" type="button" aria-label="Close cart">×</button></div>
+      <div class="cart-contents" id="cartContents"></div>
+      <div class="cart-footer" id="cartFooter"></div>
+    </aside>
+
+    <dialog class="dish-dialog" id="dishDialog">
+      <button class="icon-button dialog-close" type="button" aria-label="Close">×</button>
+      <img id="dialogImage" src="" alt="" />
+      <div class="dialog-content"><p class="eyebrow" id="dialogRestaurant"></p><h2 id="dialogTitle"></h2><p id="dialogDescription"></p><div class="dialog-bottom"><strong id="dialogPrice"></strong><button class="dark-button" id="dialogAdd" type="button">Add to order <span>+</span></button></div></div>
+    </dialog>
+
+    <dialog class="checkout-dialog" id="checkoutDialog">
+      <button class="icon-button dialog-close" type="button" aria-label="Close">×</button>
+      <div class="checkout-content" id="checkoutContents"></div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status"><span class="toast-check">✓</span><span id="toastText"></span></div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,324 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#f3efe4" />
+<title>EASY Web Solutions — create a website</title>
+<meta name="description" content="EASY — freelance web design & development. Custom websites, animation, and shader-driven experiences. Made in Georgia, delivered anywhere." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2317140f'/><text x='50' y='72' font-size='62' font-family='Georgia,serif' font-style='italic' fill='%231f6fb2' text-anchor='middle'>e</text></svg>" />
+
+<!-- ============ intro curtain ============ -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__word"><span>E</span><span>A</span><span>S</span><span>Y</span></div>
+</div>
+
+<!-- ============ texture + cursor ============ -->
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+<!-- ============ nav ============ -->
+<header class="nav" id="nav">
+  <a href="#top" class="nav__brand" data-cursor>
+    <span class="nav__mark">e</span>asy<span class="nav__dot">.</span>
+  </a>
+
+  <nav class="nav__links" id="navLinks" aria-label="Primary">
+    <a href="#work">Work</a>
+    <a href="#services">Services</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="btn nav__menucta" data-cursor>Start a project <span aria-hidden="true">↗</span></a>
+  </nav>
+
+  <a href="#contact" class="btn btn--sm nav__cta" data-magnetic data-cursor>
+    Start a project <span aria-hidden="true">↗</span>
+  </a>
+
+  <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
+</header>
+<div class="nav__scrim" id="navScrim" aria-hidden="true"></div>
+
+<main id="top">
+
+  <!-- ============ hero ============ -->
+  <section class="hero">
+    <div class="hero__grid">
+      <div class="hero__lead">
+        <p class="eyebrow reveal">
+          <span class="eyebrow__dot"></span> EASY Web Solutions · Based in Georgia 🇬🇪
+        </p>
+
+        <h1 class="hero__title">
+          <span class="line"><span class="word">Create</span></span>
+          <span class="line"><span class="word">a</span> <span class="word ital grad">website.</span></span>
+        </h1>
+
+        <p class="hero__sub reveal">
+          I design and build custom websites — from clean one-pagers to
+          shader-driven experiences that people actually remember. No templates,
+          no filler, no “good enough”.
+        </p>
+
+        <div class="hero__actions reveal">
+          <a href="#pricing" class="btn" data-magnetic data-cursor>See the pricing</a>
+          <a href="#work" class="btn btn--ghost" data-cursor>
+            View work <span class="btn__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="hero__meta reveal">
+          <div><strong>Design</strong><span>+ development</span></div>
+          <div><strong>Custom</strong><span>never templated</span></div>
+          <div><strong>Fast</strong><span>built to load quick</span></div>
+        </div>
+      </div>
+
+      <div class="hero__art reveal">
+        <figure class="brandcard">
+          <img src="images/easy-logo.jpg" alt="EASY Web Solutions logo" width="900" height="745" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ marquee ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Web Design<i>✶</i>Development<i>✶</i>Animation<i>✶</i>WebGL &amp; Shaders<i>✶</i>Landing Pages<i>✶</i>E-commerce<i>✶</i>Branding<i>✶</i>SEO<i>✶</i></span>
+      <span>Web Design<i>✶</i>Development<i>✶</i>Animation<i>✶</i>WebGL &amp; Shaders<i>✶</i>Landing Pages<i>✶</i>E-commerce<i>✶</i>Branding<i>✶</i>SEO<i>✶</i></span>
+    </div>
+  </div>
+
+  <!-- ============ work ============ -->
+  <section class="section work" id="work">
+    <div class="section__head">
+      <span class="tag reveal">01 — Selected work</span>
+      <h2 class="section__title reveal">A few things<br />I've built.</h2>
+      <p class="section__note reveal">
+        A few recent builds — a natural-wine cellar, a school-community app,
+        and my own studio brand.
+      </p>
+    </div>
+
+    <div class="work__grid">
+      <!-- 01 · Orpiri — winery -->
+      <a href="#contact" class="proj proj--1 reveal" data-cursor="View">
+        <div class="proj__thumb" data-label="Case study ↗" role="img" aria-label="Orpiri winery website — the cellar release page"></div>
+        <div class="proj__row">
+          <h3>Orpiri</h3><span class="proj__year">'25</span>
+        </div>
+        <p class="proj__cats">Winery · Qvevri wine · Editorial</p>
+      </a>
+
+      <!-- 02 · ES Organizer — school community app -->
+      <a href="https://eu-organizer.vercel.app" target="_blank" rel="noopener" class="proj proj--3 reveal" data-cursor="Live">
+        <div class="proj__thumb" data-label="Visit live site ↗" role="img" aria-label="ES Organizer web app — create account screen"></div>
+        <div class="proj__row">
+          <h3>ES Organizer</h3><span class="proj__year">'25</span>
+        </div>
+        <p class="proj__cats">Web app · Accounts · Community</p>
+      </a>
+
+      <!-- 04 · Easy — studio brand -->
+      <a href="#contact" class="proj proj--4 reveal" data-cursor="View">
+        <div class="proj__thumb" data-label="Case study ↗" role="img" aria-label="Easy studio brand — pricing page"></div>
+        <div class="proj__row">
+          <h3>Easy</h3><span class="proj__year">'25</span>
+        </div>
+        <p class="proj__cats">Brand · Landing · Pricing</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ services ============ -->
+  <section class="section services" id="services">
+    <div class="section__head">
+      <span class="tag reveal">02 — What I do</span>
+      <h2 class="section__title reveal">Everything your<br />site needs. In one place.</h2>
+    </div>
+
+    <ul class="svc">
+      <li class="svc__row reveal" data-cursor>
+        <span class="svc__no">/01</span>
+        <h3 class="svc__name">Web Design</h3>
+        <p class="svc__desc">Layouts with a point of view. Typography, colour and rhythm that make a brand feel like itself — not like a theme everyone bought.</p>
+        <span class="svc__arrow" aria-hidden="true">↗</span>
+      </li>
+      <li class="svc__row reveal" data-cursor>
+        <span class="svc__no">/02</span>
+        <h3 class="svc__name">Development</h3>
+        <p class="svc__desc">Hand-written, responsive, fast. Clean code that behaves the same on a phone in the rain and a 4K monitor.</p>
+        <span class="svc__arrow" aria-hidden="true">↗</span>
+      </li>
+      <li class="svc__row reveal" data-cursor>
+        <span class="svc__no">/03</span>
+        <h3 class="svc__name">Animation &amp; Interaction</h3>
+        <p class="svc__desc">Scroll reveals, magnetic buttons, micro-interactions. Motion that guides the eye instead of showing off.</p>
+        <span class="svc__arrow" aria-hidden="true">↗</span>
+      </li>
+      <li class="svc__row reveal" data-cursor>
+        <span class="svc__no">/04</span>
+        <h3 class="svc__name">WebGL, 3D &amp; Shaders</h3>
+        <p class="svc__desc">The fun stuff. Custom shaders, generative backgrounds and 3D moments that make people stop scrolling.</p>
+        <span class="svc__arrow" aria-hidden="true">↗</span>
+      </li>
+      <li class="svc__row reveal" data-cursor>
+        <span class="svc__no">/05</span>
+        <h3 class="svc__name">Performance &amp; SEO</h3>
+        <p class="svc__desc">Pretty is nothing if it's slow or invisible. Optimised assets, sensible markup, real Lighthouse scores.</p>
+        <span class="svc__arrow" aria-hidden="true">↗</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ process ============ -->
+  <section class="section process">
+    <div class="section__head">
+      <span class="tag reveal">03 — How it works</span>
+      <h2 class="section__title reveal">Four steps.<br />Zero headaches.</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal"><span class="step__no">1</span><h3>We talk</h3><p>Tell me what you need and who it's for. A quick message is enough to start.</p></div>
+      <div class="step reveal"><span class="step__no">2</span><h3>I design</h3><p>You get a concept and a clear price. We tweak until it feels right.</p></div>
+      <div class="step reveal"><span class="step__no">3</span><h3>I build</h3><p>Pixel by pixel, in real code. You watch it come alive with previews.</p></div>
+      <div class="step reveal"><span class="step__no">4</span><h3>We launch</h3><p>It goes live, loads fast, and you own everything. Simple as that.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ pricing ============ -->
+  <section class="section pricing" id="pricing">
+    <div class="section__head">
+      <span class="tag reveal">04 — Pricing</span>
+      <h2 class="section__title reveal">Honest prices.<br />No surprises.</h2>
+      <p class="section__note reveal">All prices in Georgian Lari (₾). Every project is quoted before we start — the number you see is the number you pay.</p>
+    </div>
+
+    <div class="cards">
+      <!-- simple -->
+      <article class="card reveal" data-cursor>
+        <header class="card__head">
+          <span class="card__kicker">Simple</span>
+          <p class="card__for">One-pagers &amp; landing pages</p>
+        </header>
+        <div class="card__price"><span class="card__cur">₾</span>300</div>
+        <ul class="card__list">
+          <li>Single-page website</li>
+          <li>Fully responsive on every device</li>
+          <li>Smooth scroll animations</li>
+          <li>Contact links &amp; socials</li>
+          <li>No backend — fast &amp; cheap to host</li>
+          <li>Delivered in ~3–5 days</li>
+        </ul>
+        <a href="#contact" class="btn btn--ghost card__btn" data-cursor>Choose Simple</a>
+      </article>
+
+      <!-- standard -->
+      <article class="card card--feature reveal" data-cursor>
+        <span class="card__flag">most&nbsp;popular</span>
+        <header class="card__head">
+          <span class="card__kicker">Standard</span>
+          <p class="card__for">Proper multi-page websites</p>
+        </header>
+        <div class="card__price"><span class="card__cur">₾</span>500</div>
+        <ul class="card__list">
+          <li>Up to ~5 custom pages</li>
+          <li>Unique design, made for your brand</li>
+          <li>Advanced animation &amp; interactions</li>
+          <li>Easy content editing (optional CMS)</li>
+          <li>SEO groundwork built in</li>
+          <li>Delivered in ~1–2 weeks</li>
+        </ul>
+        <a href="#contact" class="btn card__btn" data-magnetic data-cursor>Choose Standard</a>
+      </article>
+
+      <!-- premium -->
+      <article class="card reveal" data-cursor>
+        <header class="card__head">
+          <span class="card__kicker">Premium</span>
+          <p class="card__for">Shader &amp; 3D experiences</p>
+        </header>
+        <div class="card__price">
+          <span class="card__cur">₾</span>800<span class="card__to">–900</span>
+        </div>
+        <ul class="card__list">
+          <li>Everything in Standard</li>
+          <li>Custom WebGL / shaders / 3D</li>
+          <li>Bespoke, one-of-a-kind interactions</li>
+          <li>Performance-tuned to stay smooth</li>
+          <li>The kind of site people screenshot</li>
+          <li>Timeline quoted per project</li>
+        </ul>
+        <a href="#contact" class="btn btn--ghost card__btn" data-cursor>Choose Premium</a>
+      </article>
+    </div>
+
+    <p class="pricing__foot reveal">Not sure which fits? <a href="#contact">Tell me about your idea</a> and I'll point you the right way — for free.</p>
+  </section>
+
+  <!-- ============ about ============ -->
+  <section class="section about" id="about">
+    <div class="about__grid">
+      <div class="about__text">
+        <span class="tag reveal">05 — About</span>
+        <h2 class="about__title reveal">
+          Hi — I'm Alex, the<br />person behind <span class="ital accent">EASY.</span>
+        </h2>
+        <div class="reveal">
+          <p>I'm a freelance web developer from Georgia 🇬🇪. I started EASY on a simple idea: good websites shouldn't be a mystery, a fight, or a fortune. You should get something that looks premium, works everywhere, and doesn't make you want to email support at 2am.</p>
+          <p>I take on a handful of projects at a time so each one gets real attention — the details, the animations, the little moments that make a site feel <em>made</em> and not generated. If you've got an idea, I'd genuinely like to hear it.</p>
+        </div>
+        <div class="about__stats reveal">
+          <div><b data-count="100">0</b><span>% custom code</span></div>
+          <div><b data-count="3">0</b><span>tiers, one me</span></div>
+          <div><b>∞</b><span>coffees, probably</span></div>
+        </div>
+      </div>
+
+      <div class="about__side reveal" aria-hidden="true">
+        <div class="sticker sticker--1">available for<br /><b>new work</b></div>
+        <div class="sticker sticker--2">no<br />templates</div>
+        <div class="sticker sticker--3">made in<br />georgia 🇬🇪</div>
+        <div class="sticker sticker--4">₾ fair<br />pricing</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ contact ============ -->
+  <section class="section contact" id="contact">
+    <span class="tag reveal">06 — Contact</span>
+    <h2 class="contact__title reveal">
+      Let's build<br /><span class="ital accent">something good.</span>
+    </h2>
+    <p class="contact__sub reveal">Got a project, a rough idea, or just a question? Send it over — I reply to everything.</p>
+
+    <a class="contact__mail reveal" href="mailto:alexmachavariani860@gmail.com" data-magnetic data-cursor>
+      alexmachavariani860@gmail.com
+      <span class="contact__mailicon" aria-hidden="true">↗</span>
+    </a>
+
+    <div class="contact__links reveal">
+      <!-- 👉 Update these handles with your real ones -->
+      <a href="https://t.me/" target="_blank" rel="noopener" data-cursor>Telegram</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener" data-cursor>Instagram</a>
+      <a href="https://github.com/" target="_blank" rel="noopener" data-cursor>GitHub</a>
+    </div>
+  </section>
+</main>
+
+<!-- ============ footer ============ -->
+<footer class="footer">
+  <div class="footer__big" aria-hidden="true">EASY</div>
+  <div class="footer__row">
+    <span>© <span id="year"></span> EASY — web studio</span>
+    <span>Made with care in Georgia 🇬🇪</span>
+    <a href="#top" data-cursor>Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
