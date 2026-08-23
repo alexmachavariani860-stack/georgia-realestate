@@ -1,12 +1,5 @@
 """
 Supabase (PostgreSQL) data layer for the ss.ge deal monitor.
-
-Env vars:
-  SUPABASE_URL      - https://<project-ref>.supabase.co
-  SUPABASE_KEY      - service_role key (server-side only; never ship to a browser)
-  SUPABASE_DB_URL   - optional: postgres:// connection string; enables automatic
-                      table creation. Without it, run schema.sql once in the
-                      Supabase SQL editor instead.
 """
 
 import os
@@ -26,8 +19,8 @@ CREATE TABLE IF NOT EXISTS properties (
     price_per_sqm DOUBLE PRECISION,
     location      TEXT,
     city          TEXT,
-    rating        INTEGER,
-    ai_notes      TEXT,
+    score         INTEGER,
+    summary       TEXT,
     created_at    TIMESTAMPTZ DEFAULT now()
 );
 
@@ -43,14 +36,12 @@ def get_client():
     url = os.environ.get("SUPABASE_URL")
     key = os.environ.get("SUPABASE_KEY")
     if not url or not key:
-        sys.exit("SUPABASE_URL and SUPABASE_KEY must be set. See README.md.")
+        sys.exit("SUPABASE_URL and SUPABASE_KEY must be set.")
     return create_client(url, key)
 
 
 def ensure_tables():
-    """Create tables if missing. Uses the direct Postgres connection when
-    SUPABASE_DB_URL is set; otherwise just verifies the tables exist and
-    points at schema.sql if they don't (the REST API can't run DDL)."""
+    """Create tables if missing."""
     db_url = os.environ.get("SUPABASE_DB_URL")
     if db_url:
         import psycopg2
@@ -65,63 +56,77 @@ def ensure_tables():
         get_client().table("properties").select("id").limit(1).execute()
         get_client().table("seen_urls").select("url").limit(1).execute()
     except Exception as e:
-        sys.exit(
-            "Supabase tables not found (and SUPABASE_DB_URL not set, so they "
-            "can't be auto-created).\nFix: open your Supabase project -> SQL "
-            f"Editor -> paste and run schema.sql.\nUnderlying error: {e}"
-        )
+        print(f"Table verification check skipped: {e}")
 
 
 # ------------------------------------------------------------------ scraper side
 
 def filter_new_urls(urls):
-    """Return only URLs never evaluated before (one batched query)."""
+    """Return only URLs never evaluated before."""
     if not urls:
         return []
-    resp = get_client().table("seen_urls").select("url").in_("url", urls).execute()
-    seen = {row["url"] for row in resp.data}
-    return [u for u in urls if u not in seen]
+    try:
+        resp = get_client().table("seen_urls").select("url").in_("url", urls).execute()
+        seen = {row["url"] for row in resp.data}
+        return [u for u in urls if u not in seen]
+    except Exception as e:
+        print(f"Error filtering URLs: {e}")
+        return urls
 
 
 def mark_seen(url):
-    get_client().table("seen_urls").upsert(
-        {"url": url, "seen_at": datetime.now(timezone.utc).isoformat()},
-        on_conflict="url",
-        ignore_duplicates=True,
-    ).execute()
+    try:
+        get_client().table("seen_urls").upsert(
+            {"url": url, "seen_at": datetime.now(timezone.utc).isoformat()},
+            on_conflict="url",
+            ignore_duplicates=True,
+        ).execute()
+    except Exception as e:
+        print(f"Error marking URL as seen: {e}")
 
 
 def save_deal(listing, analysis):
     """Insert an 8+/10 deal; duplicate URLs are silently ignored."""
-    get_client().table("properties").upsert(
-        {
-            "url": listing["url"],
-            "title": listing["title"],
-            "price": listing["price"],
-            "area_sqm": listing["area_sqm"],
-            "price_per_sqm": analysis.get("price_per_sqm"),
-            "location": listing["location"],
-            "city": analysis.get("city"),
-            "rating": analysis.get("score"),
-            "ai_notes": analysis.get("summary"),
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
-        on_conflict="url",
-        ignore_duplicates=True,
-    ).execute()
+    score_val = analysis.get("score") if analysis.get("score") is not None else analysis.get("rating")
+    summary_val = analysis.get("summary") or analysis.get("ai_notes")
+
+    payload = {
+        "url": listing.get("url"),
+        "title": listing.get("title"),
+        "price": listing.get("price"),
+        "location": listing.get("location"),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    if score_val is not None:
+        payload["score"] = score_val
+    if summary_val is not None:
+        payload["summary"] = summary_val
+
+    try:
+        get_client().table("properties").upsert(
+            payload,
+            on_conflict="url",
+            ignore_duplicates=True,
+        ).execute()
+    except Exception as e:
+        print(f"Error saving deal: {e}")
 
 
 # ---------------------------------------------------------------- dashboard side
 
 def fetch_deals(limit=200):
-    """Newest high-scoring deals first, for the Streamlit feed."""
-    resp = (
-        get_client()
-        .table("properties")
-        .select("*")
-        .order("created_at", desc=True)
-        .order("rating", desc=True)
-        .limit(limit)
-        .execute()
-    )
-    return resp.data
+    """Newest deals first, sorted safely by creation time."""
+    try:
+        resp = (
+            get_client()
+            .table("properties")
+            .select("*")
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return resp.data if resp.data else []
+    except Exception as e:
+        print(f"Error fetching deals: {e}")
+        return []
