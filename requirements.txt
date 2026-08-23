@@ -1,4 +1,5 @@
 streamlit
 google-genai
 supabase
-playwright
+requests
+beautifulsoup4
